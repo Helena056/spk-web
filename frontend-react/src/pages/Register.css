@@ -1,0 +1,39 @@
+
+.register-container {
+  max-width: 450px;
+}
+
+.register-logo {
+  background: linear-gradient(135deg, #8b5cf6 0%, #4c1d95 100%);
+  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.5);
+  transform: rotate(5deg);
+}
+
+.register-input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+}
+
+.dark-option {
+  background: #0f172a;
+  color: white;
+}
+
+.register-btn-glow {
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  box-shadow: 0 10px 20px -10px rgba(139, 92, 246, 0.7);
+}
+
+.register-btn-glow:hover:not(:disabled) {
+  box-shadow: 0 15px 25px -10px rgba(139, 92, 246, 0.9);
+  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+}
+
+.register-link {
+  color: #a78bfa;
+}
+
+.register-link:hover {
+  color: #ddd6fe;
+  text-shadow: 0 0 8px rgba(167, 139, 250, 0.5);
+}

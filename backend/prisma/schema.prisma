@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+//
+// =======================
+// 👤 USER
+// =======================
+//
+model User {
+  id            Int      @id @default(autoincrement())
+  username      String   @unique
+  password      String
+  role          Role
+
+  mahasiswaNim  String?  @unique
+  mahasiswa     Mahasiswa? @relation(fields: [mahasiswaNim], references: [nim])
+
+  createdAt     DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  DOSEN
+  MAHASISWA
+}
+
+//
+// =======================
+// 🎓 MAHASISWA
+// =======================
+//
+model Mahasiswa {
+  nim          String       @id
+  nama         String
+  judul_ta     String
+
+  penilaian    Penilaian[]
+  hasilSAW     HasilSAW?
+
+  user         User?
+
+  createdAt    DateTime @default(now())
+}
+
+//
+// =======================
+// 📊 KRITERIA
+// =======================
+//
+model Kriteria {
+  kode_kriteria  String   @id
+  nama           String
+  bobot          Float
+  jenis          JenisKriteria
+
+  penilaian      Penilaian[]
+
+  createdAt      DateTime @default(now())
+}
+
+enum JenisKriteria {
+  BENEFIT
+  COST
+}
+
+//
+// =======================
+// 🧮 PENILAIAN
+// =======================
+//
+model Penilaian {
+  id               Int      @id @default(autoincrement())
+
+  mahasiswaNim     String
+  kode_kriteria    String
+  nilai            Float
+
+  mahasiswa        Mahasiswa @relation(fields: [mahasiswaNim], references: [nim], onDelete: Cascade)
+
+  kriteria         Kriteria @relation(fields: [kode_kriteria], references: [kode_kriteria], onDelete: Cascade)
+
+  createdAt        DateTime @default(now())
+}
+
+//
+// =======================
+// 🏆 HASIL SAW
+// =======================
+//
+model HasilSAW {
+  id              Int      @id @default(autoincrement())
+
+  mahasiswaNim    String   @unique
+  nilaiAkhir      Float
+  status          String
+
+  mahasiswa       Mahasiswa @relation(fields: [mahasiswaNim], references: [nim], onDelete: Cascade)
+
+  createdAt       DateTime @default(now())
+}
