@@ -4,66 +4,14 @@ const prisma = require("./prisma");
 
 const app = express();
 
-/* =========================
-   CONFIG
-========================= */
-
-app.use(cors({
-  origin: "*",
-}));
-
+app.use(cors());
 app.use(express.json());
 
 /* =========================
    TEST SERVER
 ========================= */
-
 app.get("/", (req, res) => {
   res.send("Backend SPK SAW jalan 🚀");
-});
-
-/* =========================
-   API DOCUMENTATION
-========================= */
-
-app.get("/api", (req, res) => {
-  res.json({
-    success: true,
-    message: "API SPK SAW ACTIVE 🚀",
-
-    endpoints: {
-      auth: {
-        register: "POST /register",
-        login: "POST /login",
-      },
-
-      mahasiswa: {
-        getAll: "GET /mahasiswa",
-        create: "POST /mahasiswa",
-        update: "PUT /mahasiswa/:nim",
-        delete: "DELETE /mahasiswa/:nim",
-      },
-
-      kriteria: {
-        getAll: "GET /kriteria",
-        create: "POST /kriteria",
-        update: "PUT /kriteria/:kode",
-        delete: "DELETE /kriteria/:kode",
-      },
-
-      penilaian: {
-        getAll: "GET /penilaian",
-        create: "POST /penilaian",
-        update: "PUT /penilaian/:id",
-        delete: "DELETE /penilaian/:id",
-      },
-
-      saw: {
-        hitung: "GET /saw",
-        hasil: "GET /hasil-saw",
-      },
-    },
-  });
 });
 
 /* =========================
@@ -80,23 +28,16 @@ app.post("/register", async (req, res) => {
         username,
         password,
         role,
-        mahasiswaNim: role === "MAHASISWA"
-          ? mahasiswaNim
-          : null,
+        mahasiswaNim: role === "MAHASISWA" ? mahasiswaNim : null,
       },
     });
 
-    res.json({
-      success: true,
-      message: "Register berhasil",
-      data: user,
-    });
+    res.json(user);
 
   } catch (error) {
     console.log(error);
 
     res.status(500).json({
-      success: false,
       message: "Register gagal",
     });
   }
@@ -116,28 +57,21 @@ app.post("/login", async (req, res) => {
 
     if (!user) {
       return res.status(401).json({
-        success: false,
         message: "Username atau password salah",
       });
     }
 
     res.json({
-      success: true,
-      message: "Login berhasil",
-
-      data: {
-        id: user.id,
-        username: user.username,
-        role: user.role,
-        mahasiswaNim: user.mahasiswaNim,
-      },
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      mahasiswaNim: user.mahasiswaNim,
     });
 
   } catch (error) {
     console.log(error);
 
     res.status(500).json({
-      success: false,
       message: "Login gagal",
     });
   }
@@ -150,7 +84,6 @@ app.post("/login", async (req, res) => {
 // GET ALL
 app.get("/mahasiswa", async (req, res) => {
   try {
-
     const data = await prisma.mahasiswa.findMany({
       include: {
         penilaian: true,
@@ -158,25 +91,16 @@ app.get("/mahasiswa", async (req, res) => {
       },
     });
 
-    res.json({
-      success: true,
-      data,
-    });
+    res.json(data);
 
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Gagal mengambil data mahasiswa",
-    });
   }
 });
 
 // POST
 app.post("/mahasiswa", async (req, res) => {
   try {
-
     const { nim, nama, judul_ta } = req.body;
 
     const data = await prisma.mahasiswa.create({
@@ -187,50 +111,13 @@ app.post("/mahasiswa", async (req, res) => {
       },
     });
 
-    res.json({
-      success: true,
-      message: "Mahasiswa berhasil ditambahkan",
-      data,
-    });
+    res.json(data);
 
   } catch (error) {
     console.log(error);
 
     res.status(500).json({
-      success: false,
       message: "Tambah mahasiswa gagal",
-    });
-  }
-});
-
-// PUT
-app.put("/mahasiswa/:nim", async (req, res) => {
-  try {
-
-    const { nama, judul_ta } = req.body;
-
-    const data = await prisma.mahasiswa.update({
-      where: {
-        nim: req.params.nim,
-      },
-      data: {
-        nama,
-        judul_ta,
-      },
-    });
-
-    res.json({
-      success: true,
-      message: "Mahasiswa berhasil diupdate",
-      data,
-    });
-
-  } catch (error) {
-    console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Gagal update mahasiswa",
     });
   }
 });
@@ -246,17 +133,33 @@ app.delete("/mahasiswa/:nim", async (req, res) => {
     });
 
     res.json({
-      success: true,
       message: "Mahasiswa berhasil dihapus",
     });
 
   } catch (error) {
     console.log(error);
+  }
+});
 
-    res.status(500).json({
-      success: false,
-      message: "Gagal hapus mahasiswa",
+// PUT (EDIT MAHASISWA)
+app.put("/mahasiswa/:nim", async (req, res) => {
+  try {
+    const { nama, judul_ta } = req.body;
+
+    const data = await prisma.mahasiswa.update({
+      where: {
+        nim: req.params.nim,
+      },
+      data: {
+        nama,
+        judul_ta,
+      },
     });
+
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Gagal update mahasiswa" });
   }
 });
 
@@ -270,18 +173,10 @@ app.get("/kriteria", async (req, res) => {
 
     const data = await prisma.kriteria.findMany();
 
-    res.json({
-      success: true,
-      data,
-    });
+    res.json(data);
 
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Gagal mengambil kriteria",
-    });
   }
 });
 
@@ -305,26 +200,16 @@ app.post("/kriteria", async (req, res) => {
       },
     });
 
-    res.json({
-      success: true,
-      message: "Kriteria berhasil ditambahkan",
-      data,
-    });
+    res.json(data);
 
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Tambah kriteria gagal",
-    });
   }
 });
 
-// PUT
+// PUT (EDIT)
 app.put("/kriteria/:kode", async (req, res) => {
   try {
-
     const { nama, bobot, jenis } = req.body;
 
     const data = await prisma.kriteria.update({
@@ -332,26 +217,17 @@ app.put("/kriteria/:kode", async (req, res) => {
         kode_kriteria: req.params.kode,
       },
       data: {
-        nama,
-        bobot: parseFloat(bobot),
-        jenis,
-      },
+      nama,
+      bobot: parseFloat(bobot),
+      jenis,
+    },
     });
 
-    res.json({
-      success: true,
-      message: "Kriteria berhasil diupdate",
-      data,
-    });
-
+res.json(data);
   } catch (error) {
-    console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Gagal update kriteria",
-    });
-  }
+  console.log(error);
+  res.status(500).json({ message: "Gagal update kriteria" });
+}
 });
 
 // DELETE
@@ -365,17 +241,11 @@ app.delete("/kriteria/:kode", async (req, res) => {
     });
 
     res.json({
-      success: true,
       message: "Kriteria berhasil dihapus",
     });
 
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Gagal hapus kriteria",
-    });
   }
 });
 
@@ -394,18 +264,10 @@ app.get("/penilaian", async (req, res) => {
       },
     });
 
-    res.json({
-      success: true,
-      data,
-    });
+    res.json(data);
 
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Gagal mengambil penilaian",
-    });
   }
 });
 
@@ -427,31 +289,17 @@ app.post("/penilaian", async (req, res) => {
       },
     });
 
-    res.json({
-      success: true,
-      message: "Penilaian berhasil ditambahkan",
-      data,
-    });
+    res.json(data);
 
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Tambah penilaian gagal",
-    });
   }
 });
 
-// PUT
+// PUT (EDIT)
 app.put("/penilaian/:id", async (req, res) => {
   try {
-
-    const {
-      mahasiswaNim,
-      kode_kriteria,
-      nilai,
-    } = req.body;
+    const { mahasiswaNim, kode_kriteria, nilai } = req.body;
 
     const data = await prisma.penilaian.update({
       where: {
@@ -464,19 +312,10 @@ app.put("/penilaian/:id", async (req, res) => {
       },
     });
 
-    res.json({
-      success: true,
-      message: "Penilaian berhasil diupdate",
-      data,
-    });
-
+    res.json(data);
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Gagal update penilaian",
-    });
+    res.status(500).json({ message: "Gagal update penilaian" });
   }
 });
 
@@ -491,17 +330,11 @@ app.delete("/penilaian/:id", async (req, res) => {
     });
 
     res.json({
-      success: true,
       message: "Penilaian berhasil dihapus",
     });
 
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Gagal hapus penilaian",
-    });
   }
 });
 
@@ -520,102 +353,72 @@ app.get("/saw", async (req, res) => {
 
     const kriteria = await prisma.kriteria.findMany();
 
+    // 1. Mencari nilai Minimum dan Maksimum untuk setiap kriteria (Tahap Normalisasi)
     const minMaxKriteria = {};
-
     for (const krit of kriteria) {
-
       const allNilai = mahasiswa
         .map((mhs) => {
-          const p = mhs.penilaian.find(
-            (p) =>
-              p.kode_kriteria === krit.kode_kriteria
-          );
-
+          const p = mhs.penilaian.find((p) => p.kode_kriteria === krit.kode_kriteria);
           return p ? p.nilai : null;
         })
         .filter((n) => n !== null);
 
       if (allNilai.length > 0) {
-
         minMaxKriteria[krit.kode_kriteria] = {
           max: Math.max(...allNilai),
           min: Math.min(...allNilai),
         };
-
       } else {
-
-        minMaxKriteria[krit.kode_kriteria] = {
-          max: 1,
-          min: 1,
-        };
+        // Fallback jika belum ada nilai sama sekali
+        minMaxKriteria[krit.kode_kriteria] = { max: 1, min: 1 };
       }
     }
 
     let hasil = [];
 
+    // 2. Perhitungan nilai akhir tiap mahasiswa
     for (const mhs of mahasiswa) {
-
       let total = 0;
 
       for (const krit of kriteria) {
-
         const nilaiObj = mhs.penilaian.find(
-          (p) =>
-            p.kode_kriteria === krit.kode_kriteria
+          (p) => p.kode_kriteria === krit.kode_kriteria
         );
 
-        const nilai = nilaiObj
-          ? nilaiObj.nilai
-          : 0;
+        const nilai = nilaiObj ? nilaiObj.nilai : 0;
 
         if (nilai > 0) {
-
-          const {
-            max,
-            min,
-          } = minMaxKriteria[krit.kode_kriteria];
-
+          const { max, min } = minMaxKriteria[krit.kode_kriteria];
           let normalized = 0;
 
-          // BENEFIT
+          // Rumus Normalisasi SAW
           if (krit.jenis === "BENEFIT") {
-            normalized =
-              max === 0
-                ? 0
-                : nilai / max;
+            normalized = max === 0 ? 0 : nilai / max;
+          } else if (krit.jenis === "COST") {
+            normalized = nilai === 0 ? 0 : min / nilai;
           }
 
-          // COST
-          else if (krit.jenis === "COST") {
-            normalized =
-              nilai === 0
-                ? 0
-                : min / nilai;
-          }
-
+          // Kalikan dengan Bobot
           total += normalized * krit.bobot;
         }
       }
 
-      const status =
-        total >= 0.70
-          ? "LAYAK"
-          : "TIDAK LAYAK";
+      // 3. Penentuan Status berdasarkan batas threshold >= 0.70
+      const status = total >= 0.70 ? "LAYAK" : "TIDAK LAYAK";
 
+      // SIMPAN KE HASIL SAW
       await prisma.hasilSAW.upsert({
         where: {
           mahasiswaNim: mhs.nim,
         },
-
         update: {
           nilaiAkhir: total,
-          status,
+          status: status,
         },
-
         create: {
           mahasiswaNim: mhs.nim,
           nilaiAkhir: total,
-          status,
+          status: status,
         },
       });
 
@@ -623,23 +426,15 @@ app.get("/saw", async (req, res) => {
         nama: mhs.nama,
         nim: mhs.nim,
         nilai_akhir: total,
-        status,
+        status: status,
       });
     }
 
-    res.json({
-      success: true,
-      message: "Perhitungan SAW berhasil",
-      data: hasil,
-    });
+    res.json(hasil);
 
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Gagal menghitung SAW",
-    });
+    res.status(500).json({ message: "Gagal menghitung SAW" });
   }
 });
 
@@ -656,18 +451,10 @@ app.get("/hasil-saw", async (req, res) => {
       },
     });
 
-    res.json({
-      success: true,
-      data,
-    });
+    res.json(data);
 
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Gagal mengambil hasil SAW",
-    });
   }
 });
 
@@ -678,7 +465,5 @@ app.get("/hasil-saw", async (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(
-    `Server running on port ${PORT}`
-  );
+  console.log(`Server running on port ${PORT}`);
 });
