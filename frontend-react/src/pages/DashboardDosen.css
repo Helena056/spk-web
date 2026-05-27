@@ -1,5 +1,6 @@
 /* Most of these classes match DashboardAdmin.css, but I'll redefine them to ensure isolation or in case of subtle differences like the green accent. */
 .dashboard-container {
+  padding-top: 80px;
   padding-bottom: 3rem;
 }
 
@@ -12,9 +13,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 50;
+  left: 0;
+  width: 100%;
+  z-index: 100;
 }
 
 .nav-brand {

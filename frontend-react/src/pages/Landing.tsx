@@ -11,7 +11,7 @@ const Landing: React.FC = () => {
       <nav className="navbar glass-card">
         <div className="nav-brand">
           <GraduationCap className="brand-icon" size={28} />
-          <span className="brand-text">SPK Beasiswa SAW</span>
+          <span className="brand-text">SPK Kelayakan TA SAW</span>
         </div>
         <div className="nav-actions">
           <Link to="/login" className="btn-masuk">Masuk</Link>
@@ -24,10 +24,10 @@ const Landing: React.FC = () => {
         <div className="hero-content">
           <div className="badge-glow">Sistem Pendukung Keputusan</div>
           <h1 className="hero-title">
-            Tentukan Beasiswa Lebih <span className="text-gradient">Akurat & Transparan</span>
+            Tentukan Kelayakan Ujian TA Lebih <span className="text-gradient">Akurat & Transparan</span>
           </h1>
           <p className="hero-subtitle">
-            Sistem Pendukung Keputusan menggunakan metode Simple Additive Weighting (SAW) untuk menentukan penerima beasiswa secara objektif dan efisien.
+            Sistem Pendukung Keputusan menggunakan metode Simple Additive Weighting (SAW) untuk menentukan kelayakan mahasiswa mengikuti ujian Tugas Akhir secara objektif dan efisien.
           </p>
           <div className="hero-buttons">
             <Link to="/register" className="btn-glow btn-lg">
@@ -53,7 +53,7 @@ const Landing: React.FC = () => {
         </div>
         <div className="hero-image-wrapper">
           <div className="image-glow-backdrop"></div>
-          <img src={heroImage} alt="SPK Beasiswa Dashboard" className="hero-image" />
+          <img src={heroImage} alt="SPK Kelayakan TA Dashboard" className="hero-image" />
         </div>
       </header>
 
@@ -104,9 +104,9 @@ const Landing: React.FC = () => {
         <div className="footer-content">
           <div className="footer-brand">
             <GraduationCap size={24} />
-            <span>SPK Beasiswa SAW</span>
+            <span>SPK Kelayakan TA SAW</span>
           </div>
-          <p className="copyright">© {new Date().getFullYear()} SPK Beasiswa. Dibuat untuk kelayakan tugas akhir.</p>
+          <p className="copyright">© {new Date().getFullYear()} SPK Kelayakan Tugas Akhir. Dibuat untuk kelayakan tugas akhir.</p>
         </div>
       </footer>
     </div>
