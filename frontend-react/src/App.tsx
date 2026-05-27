@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // Pages
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import DashboardAdmin from './pages/DashboardAdmin';
@@ -40,7 +41,8 @@ const App: React.FC = () => {
         
         <div className="app-content">
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             
             {/* Admin Routes */}

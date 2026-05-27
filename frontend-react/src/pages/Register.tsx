@@ -33,7 +33,7 @@ const Register: React.FC = () => {
       await api.post('/register', payload);
 
       alert('Registrasi berhasil! Silakan login.');
-      navigate('/');
+      navigate('/login');
     } catch (error) {
       alert('Registrasi gagal. Username mungkin sudah digunakan.');
     } finally {
@@ -114,7 +114,7 @@ const Register: React.FC = () => {
           </button>
           
           <div className="auth-footer">
-            <p>Sudah memiliki akun? <Link to="/" className="link-glow register-link">Login di sini</Link></p>
+            <p>Sudah memiliki akun? <Link to="/login" className="link-glow register-link">Login di sini</Link></p>
           </div>
         </form>
       </div>

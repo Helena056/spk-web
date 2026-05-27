@@ -44,7 +44,7 @@ const DashboardMahasiswa: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    navigate('/');
+    navigate('/login');
   };
 
   useEffect(() => {

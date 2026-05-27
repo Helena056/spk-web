@@ -7,7 +7,7 @@ const DashboardAdmin: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    navigate('/');
+    navigate('/login');
   };
 
   return (
